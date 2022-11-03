@@ -11291,38 +11291,68 @@ var _jquery2 = _interopRequireDefault(_jquery);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var $button1 = (0, _jquery2.default)("#add1");
-var $button2 = (0, _jquery2.default)("#minus1");
-var $button3 = (0, _jquery2.default)("#mul2");
-var $button4 = (0, _jquery2.default)("#divide2");
-var $number = (0, _jquery2.default)("#number");
-var n = localStorage.getItem("n");
-$number.text(n || 100);
+//数据相关的都放在m
+var m = {
+  data: {
+    n: parseInt(localStorage.getItem("n"))
+  }
+};
 
-$button1.on("click", function () {
-  var n = parseInt($number.text());
-  n += 1;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button2.on("click", function () {
-  var n = parseInt($number.text());
-  n -= 1;
-  localStorage.setItem("n", n);
-  $number.text(n);
-});
-$button3.on("click", function () {
-  var n = parseInt($number.text());
-  localStorage.setItem("n", n);
-  n *= 2;
-  $number.text(n);
-});
-$button4.on("click", function () {
-  var n = parseInt($number.text());
-  localStorage.setItem("n", n);
-  n /= 2;
-  $number.text(n);
-});
+//视图相关的都放在v
+var v = {
+  el: null,
+  html: "\n<section id=\"app1\">\n<div class=\"output\">\n  <span id=\"number\">{{n}}</span>\n</div>\n<div class=\"actions\">\n  <button id=\"add1\">+1</button>\n  <button id=\"minus1\">-1</button>\n  <button id=\"mul2\">*2</button>\n  <button id=\"divide2\">\xF72</button>\n</div>\n</section>",
+  render: function render() {
+    if (v.el === null) {
+      v.el = (0, _jquery2.default)(v.html.replace("{{n}}", m.data.n)).appendTo((0, _jquery2.default)("body>.page"));
+    } else {
+      var newEl = (0, _jquery2.default)(v.html.replace("{{n}}", m.data.n));
+      v.el.replaceWith(newEl);
+      v.el = newEl;
+    }
+  }
+};
+
+//其他的都是c
+var c = {
+  init: function init() {
+    c.ui = {
+      $button1: (0, _jquery2.default)("#add1"),
+      $button2: (0, _jquery2.default)("#minus1"),
+      $button3: (0, _jquery2.default)("#mul2"),
+      $button4: (0, _jquery2.default)("#divide2"),
+      number: (0, _jquery2.default)("#number")
+    };
+    c.bindEvents();
+  },
+  bindEvents: function bindEvents() {
+    c.ui.button1.on("click", function () {
+      m.data.n += 1;
+      v.render();
+    });
+    c.ui.button2.on("click", function () {
+      var n = parseInt(c.ui.number.text());
+      n -= 1;
+      localStorage.setItem("n", n);
+      c.ui.number.text(n);
+    });
+    c.ui.button3.on("click", function () {
+      var n = parseInt(c.ui.number.text());
+      localStorage.setItem("n", n);
+      n *= 2;
+      c.ui.number.text(n);
+    });
+    c.ui.button4.on("click", function () {
+      var n = parseInt(c.ui.number.text());
+      localStorage.setItem("n", n);
+      n /= 2;
+      c.ui.number.text(n);
+    });
+  }
+};
+
+v.render();
+c.init();
 },{"./app1.css":"app1.css","jquery":"..\\node_modules\\jquery\\dist\\jquery.js"}],"app2.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
@@ -11339,18 +11369,23 @@ require("./app2.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "\n<section id=\"app2\">\n<ol class=\"tab-bar\">\n  <li>1</li>\n  <li>2</li>\n</ol>\n<ol class=\"tab-content\">\n  <li>\u5185\u5BB91</li>\n  <li>\u5185\u5BB92</li>\n</ol>\n</section>\n";
+var $element = (0, _jquery2.default)(html).appendTo("body>.page");
+
 var $tabBar = (0, _jquery2.default)("#app2 .tab-bar");
 var $tabContent = (0, _jquery2.default)("#app2 .tab-content");
-
+var localKey = "app2.index";
+var index = localStorage.getItem(localKey) || 0;
 $tabBar.on("click", "li", function (e) {
   //on.click监听子元素
   var $li = (0, _jquery2.default)(e.currentTarget);
   $li.addClass("selected").siblings().removeClass("selected");
   var index = $li.index();
+  localStorage.setItem(localKey, index);
   $tabContent.children().eq(index).addClass("active").siblings().removeClass("active"); //这样的代码，js就不用管css会怎么写，css自己管
 });
 
-$tabBar.children().eq(0).trigger("click");
+$tabBar.children().eq(index).trigger("click");
 //找到tabBar的孩子们，找到第一个，触发他的click事件
 },{"jquery":"..\\node_modules\\jquery\\dist\\jquery.js","./app2.css":"app2.css"}],"app3.css":[function(require,module,exports) {
 
@@ -11368,10 +11403,23 @@ require("./app3.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+var html = "\n<section id=\"app3\">\n        <div class=\"square\"></div>\n      </section>\n";
+var $element = (0, _jquery2.default)(html).appendTo((0, _jquery2.default)("body >.page"));
+
 var $square = (0, _jquery2.default)("#app3 .square");
+var localKey = "app3.active";
+var active = localStorage.getItem(localKey) === "yes";
+
+$square.toggleClass("active", active);
 
 $square.on("click", function () {
-  $square.toggleClass("active"); //.toggleClass的意思是如果有就删掉，如果没有就加上
+  if ($square.hasClass("active")) {
+    $square.removeClass("active");
+    localStorage.setItem(localKey, "no");
+  } else {
+    $square.addClass("active");
+    localStorage.setItem("app3.active", "yes");
+  }
 });
 },{"jquery":"..\\node_modules\\jquery\\dist\\jquery.js","./app3.css":"app3.css"}],"app4.css":[function(require,module,exports) {
 
@@ -11388,6 +11436,10 @@ var _jquery2 = _interopRequireDefault(_jquery);
 require("./app4.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var html = "\n<section id=\"app4\">\n<div class=\"circle\"></div>\n</section>\n";
+
+var $element = (0, _jquery2.default)(html).appendTo("body>.page");
 
 var $circle = (0, _jquery2.default)("#app4 .circle");
 
@@ -11439,7 +11491,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57966' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '60367' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
