@@ -1,5 +1,6 @@
 *{
-    margin: 0;padding: 0;
+    margin: 0;
+    padding: 0;
 }
 *{
     box-sizing: border-box;
@@ -31,7 +32,29 @@ height: 50vh;
 }
 #app1.actions{
 
-}#app3 {
+}#app2 {
+
+}
+#app2 .tab-bar{
+display: flex;
+}
+#app2 .tab-bar > li{
+border: 1px solid grey;
+width: 50%;
+}
+#app2 .tab-bar > li.selected{
+  background:rgb(253, 221,155) ;
+  color: white;
+    }
+#app2 .tab-content{
+
+}
+#app2 .tab-content > li{
+   display: none; 
+}
+#app2 .tab-content > li.active{
+    display: block; 
+ }#app3 {
 
 }
 #app3 .square{

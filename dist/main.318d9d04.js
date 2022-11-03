@@ -11323,12 +11323,19 @@ $button4.on("click", function () {
   n /= 2;
   $number.text(n);
 });
-},{"./app1.css":"app1.css","jquery":"..\\node_modules\\jquery\\dist\\jquery.js"}],"app2.js":[function(require,module,exports) {
+},{"./app1.css":"app1.css","jquery":"..\\node_modules\\jquery\\dist\\jquery.js"}],"app2.css":[function(require,module,exports) {
+
+var reloadCSS = require('_css_loader');
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"C:\\Users\\chengjinglu\\AppData\\Local\\Yarn\\Data\\global\\node_modules\\parcel\\src\\builtins\\css-loader.js"}],"app2.js":[function(require,module,exports) {
 "use strict";
 
 var _jquery = require("jquery");
 
 var _jquery2 = _interopRequireDefault(_jquery);
+
+require("./app2.css");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11345,7 +11352,7 @@ $tabBar.on("click", "li", function (e) {
 
 $tabBar.children().eq(0).trigger("click");
 //找到tabBar的孩子们，找到第一个，触发他的click事件
-},{"jquery":"..\\node_modules\\jquery\\dist\\jquery.js"}],"app3.css":[function(require,module,exports) {
+},{"jquery":"..\\node_modules\\jquery\\dist\\jquery.js","./app2.css":"app2.css"}],"app3.css":[function(require,module,exports) {
 
 var reloadCSS = require('_css_loader');
 module.hot.dispose(reloadCSS);
@@ -11432,7 +11439,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = '' || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + '53775' + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + '57700' + '/');
   ws.onmessage = function (event) {
     var data = JSON.parse(event.data);
 
